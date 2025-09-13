@@ -1,0 +1,62 @@
+name = "youtube-tldr-api"
+main = "dist/worker.js"
+compatibility_date = "2024-09-12"
+compatibility_flags = ["nodejs_compat"]
+
+# Environment variables (secrets should be set via `wrangler secret put`)
+[env.production]
+name = "youtube-tldr-api-prod"
+
+[env.staging]
+name = "youtube-tldr-api-staging"
+
+# KV Storage for caching
+[[kv_namespaces]]
+binding = "CACHE_KV"
+id = "your-kv-namespace-id"
+preview_id = "your-preview-kv-namespace-id"
+
+# Analytics Engine for metrics
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "youtube_tldr_analytics"
+
+# Environment variables that are not secrets
+[vars]
+DEFAULT_MODEL = "gpt-5"
+WORKER_DOMAIN = "your-worker-domain.workers.dev"
+MAX_TRANSCRIPT_LENGTH = "50000"
+CACHE_TTL_SECONDS = "3600"
+RETRY_MAX_ATTEMPTS = "3"
+RETRY_DELAY_MS = "1000"
+
+# Durable Objects (if needed for rate limiting)
+# [[durable_objects.bindings]]
+# name = "RATE_LIMITER"
+# class_name = "RateLimiter"
+# script_name = "rate-limiter"
+
+# Routes (if using custom domain)
+# routes = [
+#   { pattern = "api.yourdomain.com/*", custom_domain = true }
+# ]
+
+# Build configuration
+[build]
+command = "npm run build"
+cwd = "."
+watch_dir = "src"
+
+# Development configuration
+[dev]
+ip = "127.0.0.1"
+port = 8787
+local_protocol = "http"
+
+# Limits
+# [limits]
+# cpu_ms = 30000
+
+# Triggers for scheduled events
+# [[triggers.cron]]
+# cron = "0 0 * * *"  # Daily cleanup
