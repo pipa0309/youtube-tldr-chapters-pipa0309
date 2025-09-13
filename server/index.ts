@@ -1,6 +1,12 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import dotenv from 'dotenv';
+
+// Загружаем .env файл
+dotenv.config();
+
+console.log('YouTube API Key:', process.env.YOUTUBE_API_KEY ? 'Configured' : 'Not configured');
 
 const app = express();
 app.use(express.json());
@@ -61,11 +67,22 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  const host = process.env.HOST || '127.0.0.1';
+
+  // На Windows reusePort не поддерживается — включаем только на *nix
+  const listenOptions: { port: number; host: string; reusePort?: boolean } = { port, host };
+  if (process.platform !== 'win32') {
+    listenOptions.reusePort = true;
+  }
+
+  // server.listen({
+  //   port,
+  //   host: "0.0.0.0",
+  //   reusePort: true,
+  // }, () => {
+  //   log(`serving on port ${port}`);
+  // });
+    server.listen(port, host, () => {
+    log(`serving on http://${host}:${port}`);
   });
 })();

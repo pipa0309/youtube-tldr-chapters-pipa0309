@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Header from "@/components/header";
-import ApiForm from "@/components/api-form";
-import ResponseTabs from "@/components/response-tabs";
+import Header from "./header";
+import ApiForm from "./api-form";
+import ResponseTabs from "@/components/ui/response-tabs";
 import Sidebar from "@/components/sidebar";
 import type { YoutubeResponse } from "@shared/schema";
 
